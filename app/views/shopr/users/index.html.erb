@@ -1,7 +1,7 @@
 <% @page_title = t('shopr.users.users') %>
 <%= content_for :header do %>
   <p class="buttons">
-    <%= link_to "New User", new_user_registration_path, :class => 'button blue' %>
+    <%= link_to t('shopr.users.new_user'), :new_user, :class => 'button blue' %>
   </p>
   <h2 class="users">
     <%= t('shopr.users.users') %>
