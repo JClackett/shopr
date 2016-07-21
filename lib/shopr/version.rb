@@ -1,3 +1,3 @@
 module Shopr
-  VERSION = '1.1.21'.freeze
+  VERSION = '1.1.22'.freeze
 end
