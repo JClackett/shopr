@@ -36,6 +36,7 @@ Shopr::Engine.routes.draw do
     resources :delivery_service_prices
   end
   resources :tax_rates
+  resources :users
   resources :countries
   resources :attachments, only: :destroy
 
