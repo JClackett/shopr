@@ -1,0 +1,282 @@
+<%= form_for @product, :html => {:multipart => true} do |f| %>
+  <%= f.error_messages %>
+  <%= field_set_tag  t('shopr.products.product_information') do %>
+    <dl>
+      <dt>
+        <%= f.label :product_categories, t('shopr.product_category.product_categories') %>
+      </dt>
+      <dd>
+        <%= f.collection_select :product_category_ids, Shopr::ProductCategory.ordered, :id, :name, {:prompt => false}, {:class => 'chosen', :multiple => true, :data => {:placeholder => t('shopr.product_category.choose_product_category') } } %>
+      </dd>
+    </dl>
+    <div class="splitContainer">
+      <dl class="third">
+        <dt>
+          <%= f.label :name, t('shopr.products.name') %>
+        </dt>
+        <dd>
+          <%= f.text_field :name, :class => 'text focus', :required => true %>
+        </dd>
+      </dl>
+      <dl class="third">
+        <dt>
+          <%= f.label :permalink, t('shopr.products.permalink') %>
+        </dt>
+        <dd>
+          <%= f.text_field :permalink, :class => 'text' %>
+        </dd>
+      </dl>
+      <dl class="third">
+        <dt>
+          <%= f.label :sku, t('shopr.products.sku') %>
+        </dt>
+        <dd>
+          <%= f.text_field :sku, :class => 'text', :required => true %>
+        </dd>
+      </dl>
+    </div>
+    <dl>
+      <dt>
+        <%= f.label :description, t('shopr.products.description') %>
+      </dt>
+      <dd>
+        <%= f.text_area :description, :class => 'text', :required => true %>
+      </dd>
+    </dl>
+    <dl>
+      <dt>
+        <%= f.label :short_description, t('shopr.products.short_description') %>
+      </dt>
+      <dd>
+        <%= f.text_area :short_description, :class => 'text', :required => true %>
+      </dd>
+    </dl>
+    <dl>
+      <dt>
+        <%= f.label :in_the_box, t('shopr.products.in_the_box') %>
+      </dt>
+      <dd>
+        <%= f.text_area :in_the_box, :class => 'text' %>
+      </dd>
+    </dl>
+  <% end %>
+  <%= field_set_tag t('shopr.products.attributes') do %>
+    <div class="margin">
+      <table class="productAttributes">
+        <thead>
+          <tr>
+            <td>
+              <%= t('shopr.products.name') %>
+            </td>
+            <td>
+              <%= t('shopr.products.value') %>
+            </td>
+            <td class="searchable">
+              <%= t('shopr.products.searchable?') %>
+            </td>
+            <td class="searchable">
+              <%= t('shopr.products.public?') %>
+            </td>
+            <td class="remove">
+              <%= t('shopr.products.remove') %>
+            </td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="template" style="display:none;">
+            <td>
+              <%= text_field_tag 'product[product_attributes_array][][key]', '', :placeholder => t('shopr.products.name') %>
+            </td>
+            <td>
+              <%= text_field_tag 'product[product_attributes_array][][value]', '', :placeholder => t('shopr.products.value') %>
+            </td>
+            <td class="searchable">
+              <%= check_box_tag 'product[product_attributes_array][][searchable]', '1' %>
+            </td>
+            <td class="searchable">
+              <%= check_box_tag 'product[product_attributes_array][][public]', '1' %>
+            </td>
+            <td class="remove">
+              <%= link_to t('shopr.remove') , '#', :class => 'button button-mini purple' %>
+            </td>
+            <td class="handle"></td>
+          </tr>
+          <% for attribute in @product.product_attributes %>
+            <tr>
+              <td>
+                <%= text_field_tag 'product[product_attributes_array][][key]', attribute.key, :placeholder => t('shopr.products.name') %>
+              </td>
+              <td>
+                <%= text_field_tag 'product[product_attributes_array][][value]', attribute.value, :placeholder => t('shopr.products.value') %>
+              </td>
+              <td class="searchable">
+                <%= check_box_tag 'product[product_attributes_array][][searchable]', '1', attribute.searchable? %>
+              </td>
+              <td class="searchable">
+                <%= check_box_tag 'product[product_attributes_array][][public]', '1', attribute.public? %>
+              </td>
+              <td class="remove">
+                <%= link_to t("shopr.remove"), '#', :class => 'button button-mini purple' %>
+              </td>
+              <td class="handle"></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <p class="addAttribute">
+        <%= link_to t('shopr.products.add_attribute') , '#', :data => {:behavior => 'addAttributeToAttributesTable'}, :class => 'button button-mini green' %>
+      </p>
+    </div>
+  <% end %>
+  <!-- = field_set_tag t('shopr.products.attachments') do
+  -->
+  <!--   .splitContainer
+  -->
+  <!--     %dl.half
+  -->
+  <!--       %dt= f.label "attachments[default_image][file]", t('shopr.products.default_image')
+  -->
+  <!--       %dd
+  -->
+  <!--         = attachment_preview @product.default_image
+  -->
+  <!--         %p= f.file_field "attachments[default_image][file]"
+  -->
+  <!--         = f.hidden_field "attachments[default_image][role]", value: "default_image"
+  -->
+  <!--         = f.hidden_field "attachments[default_image][parent_id]", value: @product.id
+  -->
+  <!--     %dl.half
+  -->
+  <!--       %dt= f.label "attachments[data_sheet][file]", t('shopr.products.datasheet')
+  -->
+  <!--       %dd
+  -->
+  <!--         = attachment_preview @product.data_sheet
+  -->
+  <!--         %p= f.file_field "attachments[data_sheet][file]"
+  -->
+  <!--         = f.hidden_field "attachments[data_sheet][role]", value: "data_sheet"
+  -->
+  <!--         = f.hidden_field "attachments[data_sheet][parent_id]", value: @product.id
+  -->
+  <!--   .splitContainer.extraAttachments
+  -->
+  <!--     %dl.half
+  -->
+  <!--       %dd
+  -->
+  <!--         = attachment_preview nil, hide_if_blank: false
+  -->
+  <!--         %p= f.file_field "attachments[extra][file]", :multiple => true
+  -->
+  <!--         = f.hidden_field "attachments[extra][parent_type]", value: "Shopr::Product"
+  -->
+  <!--         = f.hidden_field "attachments[extra][parent_id]", value: @product.id
+  -->
+  <!--     - @product.attachments.each do |attachment|
+  -->
+  <!--       - unless ["default_image", "data_sheet"].include?(attachment.role)
+  -->
+  <!--         %dl.half
+  -->
+  <!--           %dd
+  -->
+  <!--             = attachment_preview attachment
+  -->
+  <!--   %p.addAttachments= link_to t('shopr.products.add_attachments') , '#', :data => {:behavior => 'addAttachmentToExtraAttachments'}, :class => 'button button-mini green'
+  -->
+  <% unless @product.has_variants? %>
+    <%= field_set_tag t('shopr.products.pricing') do %>
+      <div class="splitContainer">
+        <dl class="third">
+          <dt>
+            <%= f.label :price, t('shopr.products.price') %>
+          </dt>
+          <dd>
+            <div class="moneyInput">
+              <div class="currency">
+                <%= Shopr.settings.currency_unit.html_safe %>
+              </div>
+              <%= f.text_field :price, :class => 'text' %>
+            </div>
+          </dd>
+        </dl>
+        <dl class="third">
+          <dt>
+            <%= f.label :cost_price, t('shopr.products.cost_price') %>
+          </dt>
+          <dd>
+            <div class="moneyInput">
+              <div class="currency">
+                <%= Shopr.settings.currency_unit.html_safe %>
+              </div>
+              <%= f.text_field :cost_price, :class => 'text' %>
+            </div>
+          </dd>
+        </dl>
+        <dl class="third">
+          <dt>
+            <%= f.label :tax_rate_id, t('shopr.products.tax_rate') %>
+          </dt>
+          <dd>
+            <%= f.collection_select :tax_rate_id, Shopr::TaxRate.ordered, :id, :description, {:include_blank => true}, {:class => 'chosen-with-deselect', :data => {:placeholder => t('shopr.products.no_tax')}} %>
+          </dd>
+        </dl>
+      </div>
+    <% end %>
+    <%= field_set_tag  t('shopr.products.stock_control') do %>
+      <div class="splitContainer">
+        <dl class="half">
+          <dt>
+            <%= f.label :weight, t('shopr.products.weight') %>
+          </dt>
+          <dd>
+            <%= f.text_field :weight, :class => 'text' %>
+          </dd>
+        </dl>
+        <dl class="half">
+          <dt>
+            <%= f.label :stock_control,  t('shopr.products.stock_control') %>
+          </dt>
+          <dd class="checkbox">
+            <%= f.check_box :stock_control %>
+            <%= f.label :stock_control, t('shopr.products.enable_stock_control?') %>
+          </dd>
+        </dl>
+      </div>
+    <% end %>
+  <% end %>
+  <%= field_set_tag  t('shopr.products.website_properties') do %>
+    <div class="splitContainer">
+      <dl class="half">
+        <dt>
+          <%= f.label :active,  t('shopr.products.on_sale?') %>
+        </dt>
+        <dd class="checkbox">
+          <%= f.check_box :active %>
+          <%= f.label :active,  t('shopr.products.on_sale_info') %>
+        </dd>
+      </dl>
+      <dl class="half">
+        <dt>
+          <%= f.label :featured,  t('shopr.products.featured?') %>
+        </dt>
+        <dd class="checkbox">
+          <%= f.check_box :featured %>
+          <%= f.label :featured, t('shopr.products.featured_info') %>
+        </dd>
+      </dl>
+    </div>
+  <% end %>
+  <p class="submit">
+    <% unless @product.new_record? %>
+      <span class="right">
+        <%= link_to t('shopr.delete') , @product, :class => 'button purple', :method => :delete, :data => {:confirm => "Are you sure you wish to remove this product?"} %>
+      </span>
+    <% end %>
+    <%= f.submit t('shopr.submit'),  :class => 'button blue' %>
+    <%= link_to t('shopr.cancel'), :products, :class => 'button' %>
+  </p>
+<% end %>

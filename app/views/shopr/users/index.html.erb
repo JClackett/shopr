@@ -1,0 +1,35 @@
+<% @page_title = t('shopr.users.users') %>
+<%= content_for :header do %>
+  <p class="buttons">
+    <%= link_to new_user_registration_path, "New User", :class => 'button blue' %>
+  </p>
+  <h2 class="users">
+    <%= t('shopr.users.users') %>
+  </h2>
+<% end %>
+<div class="table">
+  <table class="data">
+    <thead>
+      <tr>
+        <th>
+          <%= t('shopr.users.name') %>
+        </th>
+        <th>
+          <%= t('shopr.users.email') %>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for user in @users %>
+        <tr>
+          <td>
+            <%= link_to user.full_name, [:edit, user] %>
+          </td>
+          <td>
+            <%= user.email %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
